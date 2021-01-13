@@ -1,9 +1,11 @@
-import { get, set, entries, del } from 'idb-keyval'
-import { editor, languages } from 'monaco-editor'
+import { get, set, entries, del, clear } from 'idb-keyval'
+import { editor } from 'monaco-editor'
 import { nanoid } from 'nanoid'
 import { getIconForFile, getIconForFolder, getIconForOpenFolder } from 'vscode-icons-js'
-import { Folder, menu, path, removeMenus } from './util'
-const nav = document.querySelector('nav')!
+import { Folder, languageOf, menu, nav, path, removeMenus } from './util'
+import { unzip } from 'fflate'
+import dottie from 'dottie'
+import type { unzipSync } from 'fflate'
 const monaco = editor.create(document.getElementById('editor')!, {
   theme: 'vs-dark',
   value: 'Welcome to 5de!'
@@ -87,11 +89,7 @@ function file (name: string, value: Blob, parent: HTMLElement = nav) {
   btn.addEventListener('click', async () => {
     currentFileOpen = path(btn, sep)
     monaco.setValue(await value.text())
-    const thelang = languages.getLanguages().find(lanugage => (
-      lanugage.filenames?.some(fname => fname === name)
-      || lanugage.extensions?.some(ext => name.endsWith(ext))
-      || lanugage.mimetypes?.some(mime => value.type === mime)
-    ))?.id || 'plaintext'
+    const thelang = languageOf(name, value)
     editor.setModelLanguage(monaco.getModel()!, thelang)
   })
   btn.addEventListener('contextmenu', event => {
@@ -152,4 +150,36 @@ document.getElementById('add')?.addEventListener('click', async () => {
       alert('File already exists!')
     }
   }
+})
+
+document.getElementById('import')?.addEventListener('click', async () => {
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.style.display = 'none'
+  input.accept = ".zip"
+  input.click()
+  input.addEventListener('change', async () => {
+    const { files } = input
+    const zip = files?.item(0)!
+    // const fs: Folder = {}
+    const jszip = await new Promise<ReturnType<typeof unzipSync>>(async (resolve, reject) => unzip(new Uint8Array(await zip.arrayBuffer()), (err, file) => err ? reject(err) : resolve(file)))
+    const fs: Folder = dottie.transform(
+      Object.fromEntries(
+        Object.entries(jszip)
+          .map(([name, value]) => [name, new Blob([value])])
+          .filter(([name]) => name)
+      )
+      , { delimiter: '/' }
+    )
+    for (const [key, value] of Object.entries(fs)) {
+      set(key, value)
+      if (value instanceof Blob) {
+        // is a file
+        file(key, value)
+      } else {
+        // is a folder
+        folder(key, value)
+      }
+    }
+  })
 })
