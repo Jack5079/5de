@@ -171,6 +171,7 @@ document.getElementById('import')!.addEventListener('click', () => {
       , { delimiter: '/' }
     )
     for (const [key, value] of Object.entries(fs)) {
+      if (!key) continue
       set(key, value)
       if (value instanceof Blob) {
         // is a file
