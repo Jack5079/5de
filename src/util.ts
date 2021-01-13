@@ -23,8 +23,8 @@ export function menu (x: number, y: number, options: ({
 })[]) {
   const menu = document.createElement('menu')
   document.body.append(menu)
-  menu.style.left = x + 'px'
-  menu.style.top = y + 'px'
+  menu.style.left = `${x}px`
+  menu.style.top = `${y}px`
   menu.addEventListener('click', removeMenus)
   for (const option of options) {
     const btn = document.createElement('button')
