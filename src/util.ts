@@ -1,6 +1,5 @@
 import dottie from 'dottie'
 import { unzip } from 'fflate'
-import type { unzipSync } from 'fflate'
 import { languages } from 'monaco-editor'
 import { del, get, set } from 'idb-keyval'
 
