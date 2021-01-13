@@ -31,9 +31,9 @@ function folder(name, value, parent = nav) {
   const details = document.createElement("details");
   const summary = document.createElement("summary");
   const img = new Image(20, 20);
-  img.src = "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/" + getIconForFolder(name);
+  img.src = `https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/${getIconForFolder(name)}`;
   summary.addEventListener("click", () => {
-    img.src = "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/" + (!details.open ? getIconForOpenFolder(name) : getIconForFolder(name));
+    img.src = `https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/${!details.open ? getIconForOpenFolder(name) : getIconForFolder(name)}`;
   });
   summary.append(img, new Text(name));
   summary.addEventListener("contextmenu", (event) => {
@@ -80,7 +80,7 @@ function folder(name, value, parent = nav) {
 function file(name, value, parent = nav) {
   const btn = document.createElement("button");
   const img = new Image(20, 20);
-  img.src = "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/" + getIconForFile(name);
+  img.src = `https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/${getIconForFile(name)}`;
   btn.append(img, new Text(name));
   parent.append(btn);
   btn.addEventListener("click", async () => {
