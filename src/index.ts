@@ -167,7 +167,6 @@ document.getElementById('import')?.addEventListener('click', async () => {
       Object.fromEntries(
         Object.entries(jszip)
           .map(([name, value]) => [name, new Blob([value])])
-          .filter(([name]) => name)
       )
       , { delimiter: '/' }
     )
