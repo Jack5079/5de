@@ -53,6 +53,17 @@ function del(key, customStore = defaultGetStore()) {
         return promisifyRequest(store.transaction);
     });
 }
+/**
+ * Clear all values in the store.
+ *
+ * @param customStore Method to get a custom store. Use with caution (see the docs).
+ */
+function clear(customStore = defaultGetStore()) {
+    return customStore('readwrite').then((store) => {
+        store.clear();
+        return promisifyRequest(store.transaction);
+    });
+}
 function eachCursor(customStore, callback) {
     return customStore('readonly').then((store) => {
         // This would be store.getAllKeys(), but it isn't supported by Edge or Safari.
@@ -76,4 +87,4 @@ function entries(customStore = defaultGetStore()) {
     return eachCursor(customStore, (cursor) => items.push([cursor.key, cursor.value])).then(() => items);
 }
 
-export { del, entries, get, set };
+export { clear, del, entries, get, set };
