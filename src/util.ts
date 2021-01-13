@@ -41,7 +41,7 @@ export const languageOf = (filename: string, value: Blob) => languages.getLangua
   || lanugage.mimetypes?.some(mime => value.type === mime)
 ))?.id || 'plaintext'
 
-export async function zipToFolder (zip: Blob): Promise<Folder> {
+export function zipToFolder (zip: Blob): Promise<Folder> {
   return new Promise(async (resolve, reject) => {
     unzip(new Uint8Array(await zip.arrayBuffer()), async (err, jszip) => {
       if (err) reject(err)
