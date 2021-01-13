@@ -1,7 +1,7 @@
-import {get, set, entries, del} from "../_snowpack/pkg/idb-keyval.js";
-import {editor, languages} from "../_snowpack/pkg/monaco-editor.js";
-import {nanoid} from "../_snowpack/pkg/nanoid.js";
-import {getIconForFile, getIconForFolder, getIconForOpenFolder} from "../_snowpack/pkg/vscode-icons-js.js";
+import {get, set, entries, del} from "../snowpack/pkg/idb-keyval.js";
+import {editor, languages} from "../snowpack/pkg/monaco-editor.js";
+import {nanoid} from "../snowpack/pkg/nanoid.js";
+import {getIconForFile, getIconForFolder, getIconForOpenFolder} from "../snowpack/pkg/vscode-icons-js.js";
 import {menu, path, removeMenus} from "./util.js";
 const nav = document.querySelector("nav");
 const monaco = editor.create(document.getElementById("editor"), {
