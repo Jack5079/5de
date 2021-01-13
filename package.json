@@ -3,6 +3,7 @@
   "description": "worst text editor of all time",
   "scripts": {
     "start": "snowpack dev",
+    "build:dev": "snowpack dev",
     "build": "snowpack build",
     "test": "echo \"This template does not include a test runner by default.\" && exit 1"
   },

@@ -18,6 +18,7 @@ module.exports = {
   },
   devOptions: {
     /* ... */
+    open: 'none'
   },
   buildOptions: {
     metaUrlPath: 'snowpack'
