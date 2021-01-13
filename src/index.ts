@@ -3,7 +3,6 @@ import { editor, languages } from 'monaco-editor'
 import { nanoid } from 'nanoid'
 import { getIconForFile, getIconForFolder, getIconForOpenFolder } from 'vscode-icons-js'
 import { Folder, menu, path, removeMenus } from './util'
-import '/index.css'
 const nav = document.querySelector('nav')!
 const monaco = editor.create(document.getElementById('editor')!, {
   theme: 'vs-dark',
