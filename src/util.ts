@@ -1,3 +1,6 @@
+import dottie from 'dottie'
+import { unzip } from 'fflate'
+import type { unzipSync } from 'fflate'
 import { languages } from 'monaco-editor'
 
 export const nav = document.querySelector('nav')!
@@ -36,3 +39,15 @@ export const languageOf = (filename: string, value: Blob) => languages.getLangua
   || lanugage.extensions?.some(ext => filename.endsWith(ext))
   || lanugage.mimetypes?.some(mime => value.type === mime)
 ))?.id || 'plaintext'
+
+export async function zipToFolder (zip: Blob): Promise<Folder> {
+  const jszip = await new Promise<ReturnType<typeof unzipSync>>(async (resolve, reject) => unzip(new Uint8Array(await zip.arrayBuffer()), (err, file) => err ? reject(err) : resolve(file)))
+  const fs: Folder = dottie.transform(
+    Object.fromEntries(
+      Object.entries(jszip)
+        .map(([name, value]) => [name, new Blob([value])])
+    )
+    , { delimiter: '/' }
+  )
+  return fs
+}

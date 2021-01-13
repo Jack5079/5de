@@ -2,7 +2,7 @@ import { get, set, entries, del, clear } from 'idb-keyval'
 import { editor } from 'monaco-editor'
 import { nanoid } from 'nanoid'
 import { getIconForFile, getIconForFolder, getIconForOpenFolder } from 'vscode-icons-js'
-import { Folder, languageOf, menu, nav, path, removeMenus } from './util'
+import { Folder, languageOf, menu, nav, path, removeMenus, zipToFolder } from './util'
 import { unzip } from 'fflate'
 import dottie from 'dottie'
 import type { unzipSync } from 'fflate'
@@ -161,23 +161,13 @@ document.getElementById('import')!.addEventListener('click', () => {
   input.addEventListener('change', async () => {
     const { files } = input
     const zip = files?.item(0)!
-    // const fs: Folder = {}
-    const jszip = await new Promise<ReturnType<typeof unzipSync>>(async (resolve, reject) => unzip(new Uint8Array(await zip.arrayBuffer()), (err, file) => err ? reject(err) : resolve(file)))
-    const fs: Folder = dottie.transform(
-      Object.fromEntries(
-        Object.entries(jszip)
-          .map(([name, value]) => [name, new Blob([value])])
-      )
-      , { delimiter: '/' }
-    )
+    const fs = await zipToFolder(zip)
     for (const [key, value] of Object.entries(fs)) {
       if (!key) continue
       set(key, value)
       if (value instanceof Blob) {
-        // is a file
         file(key, value)
       } else {
-        // is a folder
         folder(key, value)
       }
     }
