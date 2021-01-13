@@ -37,7 +37,7 @@ nav > *, details > button {
 img {
   margin-right: 0.5em;
 }
-details {
+details > * {
   margin-left: 1em;
 }
 
