@@ -42,15 +42,18 @@ export const languageOf = (filename: string, value: Blob) => languages.getLangua
 ))?.id || 'plaintext'
 
 export async function zipToFolder (zip: Blob): Promise<Folder> {
-  const jszip = await new Promise<ReturnType<typeof unzipSync>>(async (resolve, reject) => unzip(new Uint8Array(await zip.arrayBuffer()), (err, file) => err ? reject(err) : resolve(file)))
-  const fs: Folder = dottie.transform(
-    Object.fromEntries(
-      Object.entries(jszip)
-        .map(([name, value]) => [name, new Blob([value])])
-    )
-    , { delimiter: '/' }
-  )
-  return fs
+  return new Promise(async (resolve, reject) => {
+    unzip(new Uint8Array(await zip.arrayBuffer()), async (err, jszip) => {
+      if (err) reject(err)
+      const fs: Folder = dottie.transform(
+        Object.fromEntries(
+          Object.entries(jszip)
+            .map(([name, value]) => [name, new Blob([value])])
+        ), { delimiter: '/' }
+      )
+      resolve(fs)
+    })
+  })
 }
 
 export const deleteOption = (name: string, details: HTMLElement, sep: string) => ({
