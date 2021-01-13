@@ -1,4 +1,4 @@
-import { get, set, entries, del, clear } from 'idb-keyval'
+import { get, set, entries, clear } from 'idb-keyval'
 import { editor } from 'monaco-editor'
 import { nanoid } from 'nanoid'
 import { getIconForFile, getIconForFolder, getIconForOpenFolder } from 'vscode-icons-js'
@@ -6,7 +6,8 @@ import { deleteOption, Folder, languageOf, menu, nav, path, removeMenus, renameO
 
 const monaco = editor.create(document.getElementById('editor')!, {
   theme: 'vs-dark',
-  value: 'Welcome to 5de!'
+  value: '# Welcome to 5de!\n\nTo start, press the 📄 button to create a new file or click 📩 to import a .zip file. When your mess is too big, click 💥 to delete everything.',
+  language: 'markdown'
 })
 
 let currentFileOpen = ''
