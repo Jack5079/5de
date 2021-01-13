@@ -1,8 +1,10 @@
+import {languages} from "../snowpack/pkg/monaco-editor.js";
+export const nav = document.querySelector("nav");
 export function path(ele, sep = "/") {
-  if (ele.parentNode === document.querySelector("nav"))
+  if (ele.parentNode === nav)
     return ele.innerText;
   function getPath(details, previous = "") {
-    if (details.parentNode === document.querySelector("nav"))
+    if (details.parentNode === nav)
       return details.querySelector("summary")?.innerText + sep + previous;
     return getPath(details.parentNode, details.querySelector("summary")?.innerText + sep + previous);
   }
@@ -22,3 +24,4 @@ export function menu(x, y, options) {
     menu2.append(btn);
   }
 }
+export const languageOf = (filename, value) => languages.getLanguages().find((lanugage) => lanugage.filenames?.some((fname) => fname === filename) || lanugage.extensions?.some((ext) => filename.endsWith(ext)) || lanugage.mimetypes?.some((mime) => value.type === mime))?.id || "plaintext";

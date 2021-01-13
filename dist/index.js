@@ -1,9 +1,10 @@
 import {get, set, entries, del} from "../snowpack/pkg/idb-keyval.js";
-import {editor, languages} from "../snowpack/pkg/monaco-editor.js";
+import {editor} from "../snowpack/pkg/monaco-editor.js";
 import {nanoid} from "../snowpack/pkg/nanoid.js";
 import {getIconForFile, getIconForFolder, getIconForOpenFolder} from "../snowpack/pkg/vscode-icons-js.js";
-import {menu, path, removeMenus} from "./util.js";
-const nav = document.querySelector("nav");
+import {languageOf, menu, nav, path, removeMenus} from "./util.js";
+import {unzip} from "../snowpack/pkg/fflate.js";
+import dottie from "../snowpack/pkg/dottie.js";
 const monaco = editor.create(document.getElementById("editor"), {
   theme: "vs-dark",
   value: "Welcome to 5de!"
@@ -87,7 +88,7 @@ function file(name, value, parent = nav) {
   btn.addEventListener("click", async () => {
     currentFileOpen = path(btn, sep);
     monaco.setValue(await value.text());
-    const thelang = languages.getLanguages().find((lanugage) => lanugage.filenames?.some((fname) => fname === name) || lanugage.extensions?.some((ext) => name.endsWith(ext)) || lanugage.mimetypes?.some((mime) => value.type === mime))?.id || "plaintext";
+    const thelang = languageOf(name, value);
     editor.setModelLanguage(monaco.getModel(), thelang);
   });
   btn.addEventListener("contextmenu", (event) => {
@@ -145,4 +146,25 @@ document.getElementById("add")?.addEventListener("click", async () => {
       alert("File already exists!");
     }
   }
+});
+document.getElementById("import")?.addEventListener("click", async () => {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.style.display = "none";
+  input.accept = ".zip";
+  input.click();
+  input.addEventListener("change", async () => {
+    const {files} = input;
+    const zip = files?.item(0);
+    const jszip = await new Promise(async (resolve, reject) => unzip(new Uint8Array(await zip.arrayBuffer()), (err, file2) => err ? reject(err) : resolve(file2)));
+    const fs = dottie.transform(Object.fromEntries(Object.entries(jszip).map(([name, value]) => [name, new Blob([value])]).filter(([name]) => name)), {delimiter: "/"});
+    for (const [key, value] of Object.entries(fs)) {
+      set(key, value);
+      if (value instanceof Blob) {
+        file(key, value);
+      } else {
+        folder(key, value);
+      }
+    }
+  });
 });
