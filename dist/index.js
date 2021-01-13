@@ -5,7 +5,8 @@ import {getIconForFile, getIconForFolder, getIconForOpenFolder} from "../snowpac
 import {deleteOption, languageOf, menu, nav, path, removeMenus, renameOption, zipToFolder} from "./util.js";
 const monaco = editor.create(document.getElementById("editor"), {
   theme: "vs-dark",
-  value: "Welcome to 5de!"
+  value: "# Welcome to 5de!\n\nTo start, press the \u{1F4C4} button to create a new file or click \u{1F4E9} to import a .zip file. When your mess is too big, click \u{1F4A5} to delete everything.",
+  language: "markdown"
 });
 let currentFileOpen = "";
 monaco.getModel()?.onDidChangeContent(async (event) => {
