@@ -3,9 +3,7 @@ import { editor } from 'monaco-editor'
 import { nanoid } from 'nanoid'
 import { getIconForFile, getIconForFolder, getIconForOpenFolder } from 'vscode-icons-js'
 import { Folder, languageOf, menu, nav, path, removeMenus, zipToFolder } from './util'
-import { unzip } from 'fflate'
-import dottie from 'dottie'
-import type { unzipSync } from 'fflate'
+
 const monaco = editor.create(document.getElementById('editor')!, {
   theme: 'vs-dark',
   value: 'Welcome to 5de!'
