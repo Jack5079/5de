@@ -16,8 +16,8 @@ export const removeMenus = () => document.querySelectorAll("menu").forEach((ele)
 export function menu(x, y, options) {
   const menu2 = document.createElement("menu");
   document.body.append(menu2);
-  menu2.style.left = x + "px";
-  menu2.style.top = y + "px";
+  menu2.style.left = `${x}px`;
+  menu2.style.top = `${y}px`;
   menu2.addEventListener("click", removeMenus);
   for (const option of options) {
     const btn = document.createElement("button");
