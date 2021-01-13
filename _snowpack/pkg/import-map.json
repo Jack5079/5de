@@ -1,0 +1,8 @@
+{
+  "imports": {
+    "idb-keyval": "./idb-keyval.js",
+    "monaco-editor": "./monaco-editor.js",
+    "nanoid": "./nanoid.js",
+    "vscode-icons-js": "./vscode-icons-js.js"
+  }
+}
