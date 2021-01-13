@@ -1,6 +1,7 @@
 summary {
   vertical-align: middle;
 }
+
 html, body {
   margin: 0;
   padding: 0;
@@ -31,16 +32,18 @@ nav * {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 16px;
 }
-nav > *, details > button {
+
+nav>*, details>button {
   display: block;
 }
+
 img {
   margin-right: 0.5em;
 }
-details > * {
+
+details>* {
   margin-left: 1em;
 }
-
 
 button {
   border: 0;
@@ -52,6 +55,7 @@ button {
   float: right;
   font-weight: bold;
 }
+
 menu {
   background: darkslategray;
   position: absolute;
