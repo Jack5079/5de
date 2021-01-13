@@ -3,7 +3,6 @@ import {editor, languages} from "../_snowpack/pkg/monaco-editor.js";
 import {nanoid} from "../_snowpack/pkg/nanoid.js";
 import {getIconForFile, getIconForFolder, getIconForOpenFolder} from "../_snowpack/pkg/vscode-icons-js.js";
 import {menu, path, removeMenus} from "./util.js";
-import "../index.css";
 const nav = document.querySelector("nav");
 const monaco = editor.create(document.getElementById("editor"), {
   theme: "vs-dark",
