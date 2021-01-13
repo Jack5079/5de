@@ -177,8 +177,6 @@ document.getElementById('import')!.addEventListener('click', () => {
 document.getElementById('clear')!.addEventListener('click', () => {
   clear()
   nav.querySelectorAll('details, button').forEach(ele => {
-    if (ele.tagName === 'BUTTON') {
-      if (!ele.id) ele.remove()
-    } else ele.remove()
+    if (!ele.id) ele.remove()
   })
 })
