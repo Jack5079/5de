@@ -1,4 +1,4 @@
-import { get, set, entries, del, clear } from 'idb-keyval'
+import { get, set, entries, del } from 'idb-keyval'
 import { editor } from 'monaco-editor'
 import { nanoid } from 'nanoid'
 import { getIconForFile, getIconForFolder, getIconForOpenFolder } from 'vscode-icons-js'
