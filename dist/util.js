@@ -1,6 +1,7 @@
 import dottie from "../snowpack/pkg/dottie.js";
 import {unzip} from "../snowpack/pkg/fflate.js";
 import {languages} from "../snowpack/pkg/monaco-editor.js";
+import {del, get, set} from "../snowpack/pkg/idb-keyval.js";
 export const nav = document.querySelector("nav");
 export function path(ele, sep = "/") {
   if (ele.parentNode === nav)
@@ -32,3 +33,51 @@ export async function zipToFolder(zip) {
   const fs = dottie.transform(Object.fromEntries(Object.entries(jszip).map(([name, value]) => [name, new Blob([value])])), {delimiter: "/"});
   return fs;
 }
+export const deleteOption = (name, details, sep) => ({
+  name: "\u274C Delete",
+  async click() {
+    if (details.parentElement === nav) {
+      del(name);
+      return details.remove();
+    }
+    const pathTo = path(details, sep);
+    const goesTo = pathTo.split(sep);
+    const top = goesTo.shift();
+    const folder = await get(top);
+    goesTo.pop();
+    let currentFolder = folder;
+    for (const folderinFolder of goesTo) {
+      currentFolder = currentFolder[folderinFolder];
+    }
+    delete currentFolder[name];
+    set(top, folder);
+    details.remove();
+  }
+});
+export const renameOption = (name, details, sep) => ({
+  name: "\u{1F4DB} Rename",
+  async click() {
+    const newName = prompt("What should the new name be?");
+    if (!newName)
+      return;
+    if (details.parentElement === nav) {
+      set(newName, await get(name));
+      del(name);
+      return location.reload();
+    }
+    const pathTo = path(details, sep);
+    const goesTo = pathTo.split(sep);
+    const top = goesTo.shift();
+    const folder = await get(top);
+    goesTo.pop();
+    let currentFolder = folder;
+    for (const folderinFolder of goesTo) {
+      currentFolder = currentFolder[folderinFolder];
+    }
+    const blob = currentFolder[name];
+    delete currentFolder[name];
+    currentFolder[newName] = blob;
+    set(top, folder);
+    location.reload();
+  }
+});

@@ -1,8 +1,8 @@
-import {get, set, entries, del, clear} from "../snowpack/pkg/idb-keyval.js";
+import {get, set, entries, clear} from "../snowpack/pkg/idb-keyval.js";
 import {editor} from "../snowpack/pkg/monaco-editor.js";
 import {nanoid} from "../snowpack/pkg/nanoid.js";
 import {getIconForFile, getIconForFolder, getIconForOpenFolder} from "../snowpack/pkg/vscode-icons-js.js";
-import {languageOf, menu, nav, path, removeMenus, zipToFolder} from "./util.js";
+import {deleteOption, languageOf, menu, nav, path, removeMenus, renameOption, zipToFolder} from "./util.js";
 const monaco = editor.create(document.getElementById("editor"), {
   theme: "vs-dark",
   value: "Welcome to 5de!"
@@ -43,27 +43,8 @@ function folder(name, value, parent = nav) {
     removeMenus();
     event.preventDefault();
     menu(event.clientX, event.clientY, [
-      {
-        name: "\u274C Delete",
-        async click() {
-          if (details.parentElement === nav) {
-            del(name);
-            return details.remove();
-          }
-          const pathTo = path(details, sep);
-          const goesTo = pathTo.split(sep);
-          const top = goesTo.shift();
-          const folder2 = await get(top);
-          goesTo.pop();
-          let currentFolder = folder2;
-          for (const folderinFolder of goesTo) {
-            currentFolder = currentFolder[folderinFolder];
-          }
-          delete currentFolder[name];
-          set(top, folder2);
-          details.remove();
-        }
-      }
+      deleteOption(name, details, sep),
+      renameOption(name, details, sep)
     ]);
   });
   details.append(summary);
@@ -93,29 +74,8 @@ function file(name, value, parent = nav) {
     removeMenus();
     event.preventDefault();
     menu(event.clientX, event.clientY, [
-      {
-        name: "\u274C Delete",
-        async click() {
-          if (currentFileOpen.startsWith(path(btn, sep)))
-            currentFileOpen = "";
-          if (btn.parentElement === nav) {
-            del(name);
-            return btn.remove();
-          }
-          const pathTo = path(btn, sep);
-          const goesTo = pathTo.split(sep);
-          const top = goesTo.shift();
-          const folder2 = await get(top);
-          goesTo.pop();
-          let currentFolder = folder2;
-          for (const folderinFolder of goesTo) {
-            currentFolder = currentFolder[folderinFolder];
-          }
-          delete currentFolder[name];
-          set(top, folder2);
-          btn.remove();
-        }
-      }
+      deleteOption(name, btn, sep),
+      renameOption(name, btn, sep)
     ]);
   });
 }
