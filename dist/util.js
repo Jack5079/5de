@@ -1,3 +1,5 @@
+import dottie from "../snowpack/pkg/dottie.js";
+import {unzip} from "../snowpack/pkg/fflate.js";
 import {languages} from "../snowpack/pkg/monaco-editor.js";
 export const nav = document.querySelector("nav");
 export function path(ele, sep = "/") {
@@ -25,3 +27,8 @@ export function menu(x, y, options) {
   }
 }
 export const languageOf = (filename, value) => languages.getLanguages().find((lanugage) => lanugage.filenames?.some((fname) => fname === filename) || lanugage.extensions?.some((ext) => filename.endsWith(ext)) || lanugage.mimetypes?.some((mime) => value.type === mime))?.id || "plaintext";
+export async function zipToFolder(zip) {
+  const jszip = await new Promise(async (resolve, reject) => unzip(new Uint8Array(await zip.arrayBuffer()), (err, file) => err ? reject(err) : resolve(file)));
+  const fs = dottie.transform(Object.fromEntries(Object.entries(jszip).map(([name, value]) => [name, new Blob([value])])), {delimiter: "/"});
+  return fs;
+}

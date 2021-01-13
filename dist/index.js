@@ -2,9 +2,7 @@ import {get, set, entries, del, clear} from "../snowpack/pkg/idb-keyval.js";
 import {editor} from "../snowpack/pkg/monaco-editor.js";
 import {nanoid} from "../snowpack/pkg/nanoid.js";
 import {getIconForFile, getIconForFolder, getIconForOpenFolder} from "../snowpack/pkg/vscode-icons-js.js";
-import {languageOf, menu, nav, path, removeMenus} from "./util.js";
-import {unzip} from "../snowpack/pkg/fflate.js";
-import dottie from "../snowpack/pkg/dottie.js";
+import {languageOf, menu, nav, path, removeMenus, zipToFolder} from "./util.js";
 const monaco = editor.create(document.getElementById("editor"), {
   theme: "vs-dark",
   value: "Welcome to 5de!"
@@ -156,8 +154,7 @@ document.getElementById("import").addEventListener("click", () => {
   input.addEventListener("change", async () => {
     const {files} = input;
     const zip = files?.item(0);
-    const jszip = await new Promise(async (resolve, reject) => unzip(new Uint8Array(await zip.arrayBuffer()), (err, file2) => err ? reject(err) : resolve(file2)));
-    const fs = dottie.transform(Object.fromEntries(Object.entries(jszip).map(([name, value]) => [name, new Blob([value])])), {delimiter: "/"});
+    const fs = await zipToFolder(zip);
     for (const [key, value] of Object.entries(fs)) {
       if (!key)
         continue;
