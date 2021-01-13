@@ -28,7 +28,7 @@ export function menu(x, y, options) {
   }
 }
 export const languageOf = (filename, value) => languages.getLanguages().find((lanugage) => lanugage.filenames?.some((fname) => fname === filename) || lanugage.extensions?.some((ext) => filename.endsWith(ext)) || lanugage.mimetypes?.some((mime) => value.type === mime))?.id || "plaintext";
-export async function zipToFolder(zip) {
+export function zipToFolder(zip) {
   return new Promise(async (resolve, reject) => {
     unzip(new Uint8Array(await zip.arrayBuffer()), async (err, jszip) => {
       if (err)
