@@ -157,7 +157,7 @@ document.getElementById("import")?.addEventListener("click", async () => {
     const {files} = input;
     const zip = files?.item(0);
     const jszip = await new Promise(async (resolve, reject) => unzip(new Uint8Array(await zip.arrayBuffer()), (err, file2) => err ? reject(err) : resolve(file2)));
-    const fs = dottie.transform(Object.fromEntries(Object.entries(jszip).map(([name, value]) => [name, new Blob([value])]).filter(([name]) => name)), {delimiter: "/"});
+    const fs = dottie.transform(Object.fromEntries(Object.entries(jszip).map(([name, value]) => [name, new Blob([value])])), {delimiter: "/"});
     for (const [key, value] of Object.entries(fs)) {
       set(key, value);
       if (value instanceof Blob) {
