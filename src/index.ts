@@ -2,7 +2,7 @@ import { get, set, entries, del, clear } from 'idb-keyval'
 import { editor } from 'monaco-editor'
 import { nanoid } from 'nanoid'
 import { getIconForFile, getIconForFolder, getIconForOpenFolder } from 'vscode-icons-js'
-import { Folder, languageOf, menu, nav, path, removeMenus, zipToFolder } from './util'
+import { deleteOption, Folder, languageOf, menu, nav, path, removeMenus, renameOption, zipToFolder } from './util'
 
 const monaco = editor.create(document.getElementById('editor')!, {
   theme: 'vs-dark',
@@ -44,26 +44,8 @@ function folder (name: string, value: Folder, parent: HTMLElement = nav) {
     removeMenus()
     event.preventDefault()
     menu(event.clientX, event.clientY, [
-      {
-        name: '❌ Delete', async click () {
-          if (details.parentElement === nav) {
-            del(name)
-            return details.remove()
-          }
-          const pathTo = path(details, sep)
-          const goesTo = pathTo.split(sep)
-          const top = goesTo.shift()!
-          const folder = await get(top)
-          goesTo.pop()
-          let currentFolder = folder
-          for (const folderinFolder of goesTo) {
-            currentFolder = currentFolder[folderinFolder]
-          }
-          delete currentFolder[name]
-          set(top, folder)
-          details.remove()
-        }
-      }
+      deleteOption(name, details, sep),
+      renameOption(name, details, sep)
     ])
   })
   details.append(summary)
@@ -94,27 +76,8 @@ function file (name: string, value: Blob, parent: HTMLElement = nav) {
     removeMenus()
     event.preventDefault()
     menu(event.clientX, event.clientY, [
-      {
-        name: '❌ Delete', async click () {
-          if (currentFileOpen.startsWith(path(btn, sep))) currentFileOpen = ''
-          if (btn.parentElement === nav) {
-            del(name)
-            return btn.remove()
-          }
-          const pathTo = path(btn, sep)
-          const goesTo = pathTo.split(sep)
-          const top = goesTo.shift()!
-          const folder = await get(top)
-          goesTo.pop()
-          let currentFolder = folder
-          for (const folderinFolder of goesTo) {
-            currentFolder = currentFolder[folderinFolder]
-          }
-          delete currentFolder[name]
-          set(top, folder)
-          btn.remove()
-        }
-      }
+      deleteOption(name, btn, sep),
+      renameOption(name, btn, sep)
     ])
   })
 }

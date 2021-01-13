@@ -2,6 +2,7 @@ import dottie from 'dottie'
 import { unzip } from 'fflate'
 import type { unzipSync } from 'fflate'
 import { languages } from 'monaco-editor'
+import { del, get, set } from 'idb-keyval'
 
 export const nav = document.querySelector('nav')!
 export function path (ele: HTMLElement, sep = '/') {
@@ -51,3 +52,50 @@ export async function zipToFolder (zip: Blob): Promise<Folder> {
   )
   return fs
 }
+
+export const deleteOption = (name: string, details: HTMLElement, sep: string) => ({
+  name: '❌ Delete', async click () {
+    if (details.parentElement === nav) {
+      del(name)
+      return details.remove()
+    }
+    const pathTo = path(details, sep)
+    const goesTo = pathTo.split(sep)
+    const top = goesTo.shift()!
+    const folder = await get(top)
+    goesTo.pop()
+    let currentFolder = folder
+    for (const folderinFolder of goesTo) {
+      currentFolder = currentFolder[folderinFolder]
+    }
+    delete currentFolder[name]
+    set(top, folder)
+    details.remove()
+  }
+})
+
+export const renameOption = (name: string, details: HTMLElement, sep: string) => ({
+  name: '📛 Rename', async click () {
+    const newName = prompt('What should the new name be?')
+    if (!newName) return
+    if (details.parentElement === nav) {
+      set(newName, await get(name))
+      del(name)
+      return location.reload()
+    }
+    const pathTo = path(details, sep)
+    const goesTo = pathTo.split(sep)
+    const top = goesTo.shift()!
+    const folder = await get(top)
+    goesTo.pop()
+    let currentFolder = folder
+    for (const folderinFolder of goesTo) {
+      currentFolder = currentFolder[folderinFolder]
+    }
+    const blob = currentFolder[name]
+    delete currentFolder[name]
+    currentFolder[newName] = blob
+    set(top, folder)
+    location.reload()
+  }
+})
