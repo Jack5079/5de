@@ -48,7 +48,7 @@ button {
   color: white;
 }
 
-#add, #import {
+#add, #import, #clear {
   float: right;
   font-weight: bold;
 }

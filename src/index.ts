@@ -1,4 +1,4 @@
-import { get, set, entries, del } from 'idb-keyval'
+import { get, set, entries, del, clear } from 'idb-keyval'
 import { editor } from 'monaco-editor'
 import { nanoid } from 'nanoid'
 import { getIconForFile, getIconForFolder, getIconForOpenFolder } from 'vscode-icons-js'
@@ -139,7 +139,7 @@ async function load () {
 console.log(set, get)
 load().catch(console.error)
 
-document.getElementById('add')?.addEventListener('click', async () => {
+document.getElementById('add')!.addEventListener('click', async () => {
   const name = prompt('Name of the file')
   if (name) {
     if (!await get(name)) {
@@ -152,7 +152,7 @@ document.getElementById('add')?.addEventListener('click', async () => {
   }
 })
 
-document.getElementById('import')?.addEventListener('click', async () => {
+document.getElementById('import')!.addEventListener('click', () => {
   const input = document.createElement('input')
   input.type = 'file'
   input.style.display = 'none'
@@ -180,5 +180,14 @@ document.getElementById('import')?.addEventListener('click', async () => {
         folder(key, value)
       }
     }
+  })
+})
+
+document.getElementById('clear')!.addEventListener('click', () => {
+  clear()
+  nav.querySelectorAll('details, button').forEach(ele => {
+    if (ele.tagName === 'BUTTON') {
+      if (!ele.id) ele.remove()
+    } else ele.remove()
   })
 })
