@@ -6,7 +6,8 @@ import { Folder, menu, path, removeMenus } from './util'
 import '/index.css'
 const nav = document.querySelector('nav')!
 const monaco = editor.create(document.getElementById('editor')!, {
-  theme: 'vs-dark'
+  theme: 'vs-dark',
+  value: 'Welcome to 5de!'
 })
 
 let currentFileOpen = ''
