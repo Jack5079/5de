@@ -29,9 +29,14 @@ export function menu(x, y, options) {
 }
 export const languageOf = (filename, value) => languages.getLanguages().find((lanugage) => lanugage.filenames?.some((fname) => fname === filename) || lanugage.extensions?.some((ext) => filename.endsWith(ext)) || lanugage.mimetypes?.some((mime) => value.type === mime))?.id || "plaintext";
 export async function zipToFolder(zip) {
-  const jszip = await new Promise(async (resolve, reject) => unzip(new Uint8Array(await zip.arrayBuffer()), (err, file) => err ? reject(err) : resolve(file)));
-  const fs = dottie.transform(Object.fromEntries(Object.entries(jszip).map(([name, value]) => [name, new Blob([value])])), {delimiter: "/"});
-  return fs;
+  return new Promise(async (resolve, reject) => {
+    unzip(new Uint8Array(await zip.arrayBuffer()), async (err, jszip) => {
+      if (err)
+        reject(err);
+      const fs = dottie.transform(Object.fromEntries(Object.entries(jszip).map(([name, value]) => [name, new Blob([value])])), {delimiter: "/"});
+      resolve(fs);
+    });
+  });
 }
 export const deleteOption = (name, details, sep) => ({
   name: "\u274C Delete",
