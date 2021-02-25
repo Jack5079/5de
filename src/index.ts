@@ -54,13 +54,19 @@ function folder (name: string, value: Folder, parent: HTMLElement = nav) {
   if (!value) return
   for (const [name, fileOrFolder] of Object.entries(value)) {
     if (fileOrFolder instanceof Blob) {
-      file(name, fileOrFolder, details)
+
     } else folder(name, fileOrFolder, details)
+  }
+  for (const [name, fileOrFolder] of Object.entries(value)) {
+    if (fileOrFolder instanceof Blob) {
+      file(name, fileOrFolder, details)
+    }
   }
 }
 
 
 function file (name: string, value: Blob, parent: HTMLElement = nav) {
+  if (!name) return
   // is a file
   const btn = document.createElement('button')
   const img = new Image(20, 20)
