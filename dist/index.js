@@ -54,12 +54,18 @@ function folder(name, value, parent = nav) {
     return;
   for (const [name2, fileOrFolder] of Object.entries(value)) {
     if (fileOrFolder instanceof Blob) {
-      file(name2, fileOrFolder, details);
     } else
       folder(name2, fileOrFolder, details);
   }
+  for (const [name2, fileOrFolder] of Object.entries(value)) {
+    if (fileOrFolder instanceof Blob) {
+      file(name2, fileOrFolder, details);
+    }
+  }
 }
 function file(name, value, parent = nav) {
+  if (!name)
+    return;
   const btn = document.createElement("button");
   const img = new Image(20, 20);
   img.src = `https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/${getIconForFile(name)}`;
