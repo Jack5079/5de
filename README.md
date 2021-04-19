@@ -1,6 +1,6 @@
 # 5de
 
-The world's worst text editor.*
+The world's second worst text editor.*
 
 ## Available Scripts
 
