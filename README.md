@@ -6,7 +6,7 @@ The world's second worst text editor.*
 
 ### npm start
 
-Runs the app in the development mode.
+Runs the app in development mode.
 Open localhost:8080 to view it in the browser.
 
 The page will reload if you make edits.
